@@ -39,8 +39,8 @@ use winapi::shared::{
 
 use winapi::um::taskschd::{
     self, IDailyTrigger, IExecAction, IRegisteredTask, IRegistrationInfo, IRunningTask,
-    ITaskDefinition, ITaskFolder, ITaskService, ITaskSettings, ITrigger, ITriggerCollection,
-    ITimeTrigger,
+    ITaskDefinition, ITaskFolder, ITaskService, ITaskSettings, ITimeTrigger, ITrigger,
+    ITriggerCollection,
 };
 
 /// Check if the `HResult` represents the win32 `ERROR_FILE_NOT_FOUND`, returned by
@@ -336,7 +336,10 @@ impl TaskDefinition {
     pub fn add_time_trigger(&mut self, start_boundary: &BString) -> Result<TimeTrigger, HResult> {
         let trigger = unsafe { self.add_trigger(taskschd::TASK_TRIGGER_TIME) }.map(TimeTrigger)?;
         unsafe {
-            com_call!(trigger.0, ITimeTrigger::put_StartBoundary(start_boundary.as_raw_ptr()))?;
+            com_call!(
+                trigger.0,
+                ITimeTrigger::put_StartBoundary(start_boundary.as_raw_ptr())
+            )?;
         }
         Ok(trigger)
     }
@@ -483,8 +486,7 @@ impl DailyTrigger {
 
 pub struct TimeTrigger(ComRef<ITimeTrigger>);
 
-impl TimeTrigger {
-}
+impl TimeTrigger {}
 
 pub struct ExecAction(ComRef<IExecAction>);
 
